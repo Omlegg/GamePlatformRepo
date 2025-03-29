@@ -1,0 +1,24 @@
+@model int
+
+@{
+
+}
+
+<h2>Create new comment</h2>
+
+<form class="row g-3" method="post" action="/Comment/CreateComment/@Model" >
+    <div class="mb-1">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" name="title">
+    </div>
+    <div class="mb-1">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+    <div class="mb-1">
+        <label for="author" class="form-label">Author</label>
+        <input type="text" class="form-control" id="author" name="author">
+    </div>
+    <button class="btn btn-success">Create</button>
+</form>
+<br>

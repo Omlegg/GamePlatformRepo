@@ -8,13 +8,12 @@ using GamePlatformRepo.Models;
 using GamePlatformRepo.Repository;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace GamePlatformRepo.Controllers
 {
-    [Route("[controller]/")]
     [ProducesResponseType(400, Type = typeof(List<ValidationResponse>))]
     [ProducesResponseType(500)]
-    public class GameController : ControllerBase
+    [ProducesResponseType(200)]
+    public class GameController : Controller
     {
         private readonly IGameRepository gameRepository;
 
@@ -24,9 +23,8 @@ namespace GamePlatformRepo.Controllers
         }
 
         [HttpPost]
-        [Route("[action]")]
-        [ProducesResponseType(200)]
-        public ActionResult CreateGame([FromBody]Game game) {
+        [Route("CreateGame")]
+        public async Task<ActionResult> CreateGame([FromForm]Game game) {
             try {
                 var validationException = new ValidationException();
 
@@ -46,19 +44,31 @@ namespace GamePlatformRepo.Controllers
                     throw validationException;
                 }
 
-                var id = gameRepository.CreateGame(game);
+                var id = await gameRepository.Create(game);
 
-                return base.Ok(id);
+                return base.RedirectToAction("Create");
+
             }
             catch(ValidationException validationException) {
                 return base.BadRequest(validationException.validationResponseItems);
             }
         }
 
+        [HttpGet]
+        [Route("Create")]
+        public ActionResult Create(){
+            return base.View();
+        }
+
+
         [HttpPut]
         [Route("[action]")]
         [ProducesResponseType(200)]
-        public ActionResult UpdateGame([FromBody]Game game) {
+        public async Task<ActionResult> UpdateGame([FromBody]Game game) {
+
+            if(game == null) {
+                return base.NotFound();
+            }
             try {
                 var validationException = new ValidationException();
 
@@ -78,7 +88,7 @@ namespace GamePlatformRepo.Controllers
                     throw validationException;
                 }
 
-                gameRepository.UpdateGame(game);
+                await gameRepository.Update(game);
 
                 return base.Ok();
             }
@@ -88,14 +98,14 @@ namespace GamePlatformRepo.Controllers
         }
 
         [HttpDelete]
-        [Route("[action]")]
+        [Route("[action]/{id}")]
         [ProducesResponseType(200)]
-        public ActionResult DeleteGame([FromBody]int id) {
+        public async Task<ActionResult> DeleteGame(int id) {
             try {
                 var validationException = new ValidationException();
 
-                var foundUser = gameRepository.GetGame(id);
-                gameRepository.DeleteGame(id);
+                var foundUser = gameRepository.Get(id);
+                await gameRepository.Delete(id);
                 if(foundUser == null) {
                     validationException.validationResponseItems.Add(new ValidationResponse("Id", $"Element does not exist!"));
                 }
@@ -108,10 +118,10 @@ namespace GamePlatformRepo.Controllers
 
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("[controller]/{id}")]
         [ProducesResponseType(200, Type = typeof(Game))]
-        public ActionResult<Game> GetGameById(int id) {
-            var foundGame = gameRepository.GetGame(id);
+        public async Task<ActionResult<Game>> GetGameById(int id) {
+            var foundGame = await gameRepository.Get(id);
             var statusCode = foundGame != null 
                 ? HttpStatusCode.OK 
                 : HttpStatusCode.NotFound;
@@ -122,7 +132,30 @@ namespace GamePlatformRepo.Controllers
                 return base.NotFound();
             }
 
-            return base.Ok(foundGame);
+            return base.View(viewName: "Game", model: foundGame);
         }
+        [HttpGet]
+        [Route("Games")]
+        [ProducesResponseType(200, Type = typeof(List<Game>))]
+        public async Task<ActionResult<List<Game>>> GetGames() {
+            var foundGames = await gameRepository.GetAll();
+            var statusCode = foundGames != null 
+                ? HttpStatusCode.OK 
+                : HttpStatusCode.NotFound;
+
+            base.HttpContext.Response.StatusCode = (int)statusCode;
+
+            if(foundGames == null) {
+                return base.NotFound();
+            }
+
+            return base.View(viewName: "Games", model: foundGames);
+        }
+        [HttpGet]
+        [Route("/")]
+        public ActionResult Index() {
+            return base.View();
+        }
+
     }
 }

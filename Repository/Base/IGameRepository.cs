@@ -8,9 +8,12 @@ namespace GamePlatformRepo.Repository
 {
     public interface IGameRepository
     {
-        int CreateGame(Game game);
-        Game? GetGame(int id);
-        void DeleteGame(int id);
-        void UpdateGame(Game game);
+        Task<int> Create(Game game);
+        Task<Game?> Get(int id);
+
+        Task<List<Game>?> GetAll();
+
+        Task Delete(int id);
+        Task Update(Game game);
     }
 }

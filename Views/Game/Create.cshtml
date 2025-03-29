@@ -1,0 +1,31 @@
+@model Game
+
+<h2>Create new game</h2>
+
+
+
+<form class="row g-3" method="post" action="/CreateGame">
+    <div class="mb-1">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="mb-1">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+    <div class="mb-1">
+        <label for="price" class="form-label">Price</label>
+        <input type="text" class="form-control" id="price" name="price">
+    </div>
+    <div class="mb-1">
+        <label for="creator" class="form-label">Creator</label>
+        <input type="text" class="form-control" id="creator" name="creator">
+    </div>
+    <div class="mb-1">
+        <label for="dateOfPublication" class="form-label">Date Of publictation</label>
+        <input type="date" class="form-control" id="dateOfPublication" name="dateOfPublication">
+    </div>
+    <button class="btn btn-success">Create</button>
+
+</form>
+<br>

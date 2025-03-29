@@ -1,0 +1,146 @@
+@model Game?
+@inject ICommentRepository commentRepository
+@{
+    List<Comment>? comments = null;
+    if(Model != null){
+        comments = await commentRepository.GetAll(Model.Id);
+    }
+}
+
+
+
+@if (Model != null)
+{
+    <form id="myForm" class="row g-3">
+        <div class="mb-1">
+            <label for="Name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="Name" value="@Model.Name">
+        </div>
+        <div class="mb-1">
+            <label for="Price" class="form-label">Price</label>
+            <input type="text" class="form-control" id="Price" value="@Model.Price">
+        </div>
+        <div class="mb-1">
+            <label for="Description" class="form-label">Description</label>
+            <input type="text" class="form-control" id="Description"  value="@Model.Description">
+        </div>
+        <div class="mb-1">
+            <label for="Creator" class="form-label">Creator</label>
+            <input type="text" class="form-control" id="Creator"  value="@Model.Creator">
+        </div>
+
+        <button class="btn btn-primary">Change</button>
+    </form>
+    <br>
+    <h2>Create new comment</h2>
+
+    <form class="row g-3" method="post" action="/Comment/CreateComment/@Model.Id" >
+        <div class="mb-1">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title">
+        </div>
+        <div class="mb-1">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" class="form-control" id="description" name="description">
+        </div>
+        <div class="mb-1">
+            <label for="author" class="form-label">Author</label>
+            <input type="text" class="form-control" id="author" name="author">
+        </div>
+        <button class="btn btn-success">Create</button>
+    </form>
+    <br>
+    <h1>Comments</h1>
+    @if(comments == null || comments.Any() == false) {
+        <h3>...</h3>
+    }
+    else {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Author</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var comment in comments) {
+                    <tr id="row">
+                        <td>@comment.Title</td>
+                        <td>@comment.Description</td>
+                        <td>@comment.Author</td>
+                        <td><button class="btn btn-danger" onclick="deleteComment(this, @comment.Id)">delete</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    
+}
+
+else
+{
+    <h1 class="danger">This game does not exist!</h1>
+}
+
+<script>
+    async function deleteComment(button, commentId) {
+        try {
+            const response = await fetch(`http://localhost:5155/Comment/DeleteComment/${commentId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                // Get the row containing the button and remove it
+                button.closest('tr').remove();
+            } else {
+                console.error("Failed to delete:", response);
+            }
+        } catch (error) {
+            console.error("Request failed", error);
+        }
+    }
+</script>
+
+<script>
+    document.getElementById('myForm')
+        .addEventListener('submit', 
+            async function (event) {
+                event.preventDefault();
+
+                const name = document.getElementById('Name').value;
+                const description = document.getElementById('Description').value;
+                const price = document.getElementById('Price').value;
+                const Creator = document.getElementById('Creator').value;
+
+                const data = {
+                    id: @Model?.Id,
+                    name: name,
+                    description: description,
+                    price: price,
+                    views: @Model?.Views +1
+                    creator: creator,
+                };
+                console.log(data)
+                try {
+                    const response = await fetch('http://localhost:5155/UpdateGame', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        window.location.replace('http://localhost:5155/Games');
+                    } 
+                    else {
+                        console.error(response);
+                    }
+                } catch (error) {
+                    console.error('Request failed', error);
+                }
+            });
+    
+</script>
