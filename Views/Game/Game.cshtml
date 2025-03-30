@@ -85,25 +85,6 @@ else
 }
 
 <script>
-    async function deleteComment(button, commentId) {
-        try {
-            const response = await fetch(`http://localhost:5155/Comment/DeleteComment/${commentId}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                // Get the row containing the button and remove it
-                button.closest('tr').remove();
-            } else {
-                console.error("Failed to delete:", response);
-            }
-        } catch (error) {
-            console.error("Request failed", error);
-        }
-    }
-</script>
-
-<script>
     document.getElementById('myForm')
         .addEventListener('submit', 
             async function (event) {
@@ -112,7 +93,7 @@ else
                 const name = document.getElementById('Name').value;
                 const description = document.getElementById('Description').value;
                 const price = document.getElementById('Price').value;
-                const Creator = document.getElementById('Creator').value;
+                const creator = document.getElementById('Creator').value;
 
                 const data = {
                     id: @Model?.Id,
@@ -142,5 +123,22 @@ else
                     console.error('Request failed', error);
                 }
             });
-    
 </script>
+<script>
+    async function deleteComment(button, commentId) {
+        try {
+            const response = await fetch(`http://localhost:5155/Comment/DeleteComment/${commentId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                button.closest('tr').remove();
+            } else {
+                console.error("Failed to delete:", response);
+            }
+        } catch (error) {
+            console.error("Request failed", error);
+        }
+    }
+</script>
+
