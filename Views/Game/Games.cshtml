@@ -1,0 +1,59 @@
+
+@inject IGameRepository gameRepository
+
+
+@{
+    var games = await gameRepository.GetAll();
+}
+<h2>All users</h2>
+@if(games == null || games.Any() == false) {
+    <h3>...</h3>
+}
+else {
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col">Views</th>
+                <th scope="col">Creator</th>
+                <th scope="col">Date of Publication</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var game in games) {
+                <tr id="row">
+                    <th><a class="nav-link text-dark" href="Game/@game.Id">@game.Id</a></th>
+                    <td>@game.Name</td>
+                    <td>@game.Description</td>
+                    <td>@game.Price</td>
+                    <td>@game.Views</td>
+                    <td>@game.Creator</td>
+                    <td>@game.DateOfPublication</td>
+                    <td><button class="btn btn-danger" onclick="deleteGame(@game.Id)">delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script>
+    async function deleteGame(productId) {
+    try {
+        const response = await fetch(`http://localhost:5155/DeleteGame/${productId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            document.getElementById('row').remove();
+        } else {
+            console.error(response);
+        }
+    } catch (error) {
+        console.error("Request failed", error);
+    }
+}
+</script>

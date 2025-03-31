@@ -14,35 +14,50 @@ namespace GamePlatformRepo.Repository
     {
         private SqlConnection connection = new SqlConnection("Server=localhost;Database=GamePlatformDb;Integrated Security=true;");
 
-        public int CreateGame(Game game){
+        public async Task<int> Create(Game game){
             connection.Open();
-            string sql = "INSERT INTO Games (Name, Price, Description,Views) VALUES (@Name, @Price, @Description, @Views)";
-            connection.Execute(sql: sql,
+            string sql = "INSERT INTO Games (Name, Price, Description,Views, Creator, DateOfPublication) VALUES (@Name, @Price, @Description, @Views,  @Creator, @DateOfPublication)";
+            await connection.ExecuteAsync(sql: sql,
                 param: new
                 {
                     Description = game.Description,
                     Views = game.Views,
                     Price = game.Price,
                     Name = game.Name,
+                    Creator = game.Creator,
+                    DateOfPublication = game.DateOfPublication,
                 });
             var id = connection.ExecuteScalar<int>("SELECT SCOPE_IDENTITY()");
             connection.Close();
             return id;
         }
 
-        public void DeleteGame(int id)
+        public async Task Delete(int id)
         {
             connection.Open();
             string sql = "DELETE FROM Games WHERE Id = @Id";
-            connection.Execute(sql, new { Id = id });
+            await connection.ExecuteAsync(sql, new { Id = id });
             connection.Close();
         }
 
-        public Game? GetGame(int id)
+        public async Task<List<Game>?> GetAll()
         {
             connection.Open();
 
-            var game = connection.QueryFirst<Game>(
+            var games = await connection.QueryAsync<Game>(
+                sql: $@"select *
+                    from Games"
+                );
+
+            connection.Close();
+            return games.ToList();
+        }
+
+        public async Task<Game?> Get(int id)
+        {
+            connection.Open();
+
+            var game = await connection.QueryFirstAsync<Game>(
                 sql: $@"select *
                     from Games
                     where Id = @Id",
@@ -56,11 +71,11 @@ namespace GamePlatformRepo.Repository
             return game;
         }
 
-        public void UpdateGame(Game game)
+        public async Task Update(Game game)
         {
             connection.Open();
 
-            connection.Execute(
+            await connection.ExecuteAsync(
                 sql: @"update Games
                 set Name = @Name, 
                 Description = @Description,
