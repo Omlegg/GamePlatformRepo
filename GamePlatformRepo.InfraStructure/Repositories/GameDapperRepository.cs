@@ -16,6 +16,7 @@ namespace GamePlatformRepo.Repository
 
         public async Task<int> Create(Game game){
             connection.Open();
+            
             string sql = "INSERT INTO Games (Name, Price, Description,Views, Creator, DateOfPublication) VALUES (@Name, @Price, @Description, @Views,  @Creator, @DateOfPublication)";
             await connection.ExecuteAsync(sql: sql,
                 param: new
@@ -34,10 +35,14 @@ namespace GamePlatformRepo.Repository
 
         public async Task Delete(int id)
         {
-            connection.Open();
-            string sql = "DELETE FROM Games WHERE Id = @Id";
-            await connection.ExecuteAsync(sql, new { Id = id });
-            connection.Close();
+             using (var conn = new SqlConnection("Server=localhost;Database=GamePlatformDb;Integrated Security=true;")) 
+            {
+                await conn.OpenAsync();
+                string sql = "DELETE FROM Comments WHERE GameId = @Id";
+                await conn.ExecuteAsync(sql, new { Id = id });
+                sql = "DELETE FROM Games WHERE Id = @Id";
+                await conn.ExecuteAsync(sql, new { Id = id });
+            }
         }
 
         public async Task<List<Game>?> GetAll()

@@ -31,9 +31,9 @@ namespace GamePlatformRepo.Repository
 
         public async Task Delete(int id)
         {
-             using (var conn = new SqlConnection("Server=localhost;Database=GamePlatformDb;Integrated Security=true;")) // Ensure a fresh connection
+             using (var conn = new SqlConnection("Server=localhost;Database=GamePlatformDb;Integrated Security=true;")) 
             {
-                await conn.OpenAsync(); // Use OpenAsync() for async operations
+                await conn.OpenAsync(); 
                 string sql = "DELETE FROM Comments WHERE Id = @Id";
                 await conn.ExecuteAsync(sql, new { Id = id });
             } 

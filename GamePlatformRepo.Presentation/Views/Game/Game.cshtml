@@ -6,7 +6,25 @@
         comments = await commentRepository.GetAll(Model.Id);
     }
 }
+@{
+    IEnumerable<ValidationResponse>? validationErrors = null;
+    var validationErrorsObject = base.ViewData["validation_errors"];
 
+    if(validationErrorsObject is IEnumerable<ValidationResponse>) {
+        validationErrors = validationErrorsObject as IEnumerable<ValidationResponse>;
+    }
+}
+
+
+@if(validationErrors != null) {
+    <ul>
+        @foreach(var validationErrorItem in validationErrors) {
+            <li>
+                <b>@validationErrorItem.Property</b> <span>@validationErrorItem.Message</span>
+            </li>
+        }
+    </ul>
+}
 
 
 @if (Model != null)
@@ -26,9 +44,12 @@
         </div>
         <div class="mb-1">
             <label for="Creator" class="form-label">Creator</label>
-            <input type="text" class="form-control" id="Creator"  value="@Model.Creator">
+            <input type="text" class="form-control" id="Creator" value="@Model.Creator">
         </div>
-
+        <div class="mb-1">
+            <label for="Date-Of-Publication" class="form-label">Date Of Publication</label>
+            <h2>@Model.DateOfPublication</h2> 
+        </div>
         <button class="btn btn-primary">Change</button>
     </form>
     <br>
@@ -93,17 +114,17 @@ else
                 const name = document.getElementById('Name').value;
                 const description = document.getElementById('Description').value;
                 const price = document.getElementById('Price').value;
-                const creator = document.getElementById('Creator').value;
+                const Creator = document.getElementById('Creator').value;
 
                 const data = {
                     id: @Model?.Id,
                     name: name,
                     description: description,
                     price: price,
-                    views: @Model?.Views +1
-                    creator: creator,
+                    views: @Model?.Views +1,
+                    creator: Creator,
                 };
-                console.log(data)
+                console.log(090909090)
                 try {
                     const response = await fetch('http://localhost:5155/UpdateGame', {
                         method: 'PUT',
@@ -122,7 +143,8 @@ else
                 } catch (error) {
                     console.error('Request failed', error);
                 }
-            });
+            }
+        );
 </script>
 <script>
     async function deleteComment(button, commentId) {

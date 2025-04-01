@@ -1,6 +1,9 @@
+using FluentValidation;
 using GamePlatformRepo.Middlewares;
+using GamePlatformRepo.Models;
 using GamePlatformRepo.Repository;
 using GamePlatformRepo.Repository.Base;
+using GamePlatformRepo.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
@@ -9,6 +12,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IGameRepository, GameDapperRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentDapperRepository>();
+builder.Services.AddScoped<IValidator<Game>, GameValidator>();
+builder.Services.AddScoped<IValidator<Comment>, CommentValidator>();
 
 var app = builder.Build();
 
