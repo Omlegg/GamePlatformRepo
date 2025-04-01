@@ -42,18 +42,18 @@ else {
 
 <script>
     async function deleteGame(productId) {
-    try {
-        const response = await fetch(`http://localhost:5155/DeleteGame/${productId}`, {
-            method: 'DELETE'
-        });
+        try {
+            const response = await fetch(`http://localhost:5155/DeleteGame/${productId}`, {
+                method: 'DELETE'
+            });
 
-        if (response.ok) {
-            document.getElementById('row').remove();
-        } else {
-            console.error(response);
+            if (response.ok) {
+                document.getElementById('row').remove();
+            } else {
+                console.error(response);
+            }
+        } catch (error) {
+            console.error("Request failed", error);
         }
-    } catch (error) {
-        console.error("Request failed", error);
-    }
 }
 </script>

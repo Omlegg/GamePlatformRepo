@@ -1,6 +1,0 @@
-@GamePlatformRepo_HostAddress = http://localhost:5155
-
-GET {{GamePlatformRepo_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,5 +1,23 @@
 @model Game
+@{
+    IEnumerable<ValidationResponse>? validationErrors = null;
+    var validationErrorsObject = base.ViewData["validation_errors"];
 
+    if(validationErrorsObject is IEnumerable<ValidationResponse>) {
+        validationErrors = validationErrorsObject as IEnumerable<ValidationResponse>;
+    }
+}
+
+
+@if(validationErrors != null) {
+    <ul>
+        @foreach(var validationErrorItem in validationErrors) {
+            <li>
+                <b>@validationErrorItem.Property</b> <span>@validationErrorItem.Message</span>
+            </li>
+        }
+    </ul>
+}
 <h2>Create new game</h2>
 
 
