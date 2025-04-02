@@ -1,0 +1,31 @@
+@using GamePlatformRepo.InfraStructure.Dtos
+@model LoginDto
+
+<div class="container mt-5">
+    <h2>User Login</h2>
+    <form action="/Login" method="post">
+        <div asp-validation-summary="All"></div>
+
+        @if(base.ViewData["returnUrl"] != null) {
+            <input class="form-control" name="returnUrl" value="@base.ViewData["returnUrl"]" hidden/>
+        }
+
+        <div class="mb-3">
+            <label for="Name" class="form-label">Name</label>
+            <input asp-for="Name" class="form-control" id="Name" placeholder="Enter your username" required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Password" class="form-label">Password</label>
+            <input asp-for="Password" type="password" class="form-control" id="Password" placeholder="Enter your password" required />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

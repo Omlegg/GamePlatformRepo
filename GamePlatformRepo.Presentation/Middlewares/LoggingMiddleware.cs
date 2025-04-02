@@ -1,6 +1,7 @@
 using System.Data.SqlClient;
 using System.Text.Json;
 using Dapper;
+using GamePlatformRepo.Core.Data;
 using GamePlatformRepo.Models;
 
 namespace GamePlatformRepo.Middlewares;
@@ -9,13 +10,13 @@ public class LoggingMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<LoggingMiddleware> _logger;
-    private readonly string _connectionString;
+    private readonly GamePlatformDbContext dbContext;
 
-    public LoggingMiddleware(RequestDelegate next, ILogger<LoggingMiddleware> logger, IConfiguration configuration)
+    public LoggingMiddleware(RequestDelegate next, ILogger<LoggingMiddleware> logger, GamePlatformDbContext dbContext)
     {
         _next = next;
         _logger = logger;
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
+        this.dbContext = dbContext;
     }
 
     public async Task Invoke(HttpContext context)
@@ -63,7 +64,7 @@ public class LoggingMiddleware
             INSERT INTO Logs ( Url, RequestBody, RequestHeaders, MethodType, ResponseBody, ResponseHeaders, StatusCode, CreationDateTime, EndDateTime, ClientIp)
             VALUES ( @Url, @RequestBody, @RequestHeaders, @MethodType, @ResponseBody, @ResponseHeaders, @StatusCode, @CreationDateTime, @EndDateTime, @ClientIp)";
 
-        using var connection = new SqlConnection(_connectionString);
+        using var connection = new SqlConnection("Server=localhost;Database=GamePlatformDb;Integrated Security=true;");
         await connection.ExecuteAsync(sql, log);
     }
 }

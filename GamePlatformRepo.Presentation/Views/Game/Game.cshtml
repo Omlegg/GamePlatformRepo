@@ -43,10 +43,6 @@
             <input type="text" class="form-control" id="Description"  value="@Model.Description">
         </div>
         <div class="mb-1">
-            <label for="Creator" class="form-label">Creator</label>
-            <input type="text" class="form-control" id="Creator" value="@Model.Creator">
-        </div>
-        <div class="mb-1">
             <label for="Date-Of-Publication" class="form-label">Date Of Publication</label>
             <h2>@Model.DateOfPublication</h2> 
         </div>
@@ -114,7 +110,6 @@ else
                 const name = document.getElementById('Name').value;
                 const description = document.getElementById('Description').value;
                 const price = document.getElementById('Price').value;
-                const Creator = document.getElementById('Creator').value;
 
                 const data = {
                     id: @Model?.Id,

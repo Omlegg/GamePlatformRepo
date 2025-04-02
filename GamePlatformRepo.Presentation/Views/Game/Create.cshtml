@@ -22,7 +22,7 @@
 
 
 
-<form class="row g-3" method="post" action="/CreateGame">
+<form  enctype="multipart/form-data" class="row g-3" method="post" action="/CreateGame">
     <div class="mb-1">
         <label for="name" class="form-label">Name</label>
         <input type="text" class="form-control" id="name" name="name">
@@ -36,12 +36,12 @@
         <input type="text" class="form-control" id="price" name="price">
     </div>
     <div class="mb-1">
-        <label for="creator" class="form-label">Creator</label>
-        <input type="text" class="form-control" id="creator" name="creator">
-    </div>
-    <div class="mb-1">
         <label for="dateOfPublication" class="form-label">Date Of publictation</label>
         <input type="date" class="form-control" id="dateOfPublication" name="dateOfPublication">
+    </div>
+    <div>
+        <label for="file" class="form-label">Game</label>
+        <input id="file" class="form-control" name="file" type="file">
     </div>
     <button class="btn btn-success">Create</button>
 

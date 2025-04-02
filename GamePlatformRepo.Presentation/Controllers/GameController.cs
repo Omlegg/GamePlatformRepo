@@ -30,9 +30,9 @@ namespace GamePlatformRepo.Controllers
 
         [HttpPost]
         [Route("CreateGame")]
-        public async Task<ActionResult> CreateGame([FromForm]Game game) {
+        public async Task<ActionResult> CreateGame([FromForm]Game game,IFormFile file) {
             var validationResult = await this.gameValidator.ValidateAsync(game);
-
+            
             if(validationResult.IsValid == false) {
                 base.TempData["validation_errors"] = JsonSerializer.Serialize(validationResult.Errors.Select(error => {
                     return new ValidationResponse (
@@ -43,14 +43,19 @@ namespace GamePlatformRepo.Controllers
                 
                 return base.RedirectToAction("Create");
             }
-            var id = await gameRepository.Create(game);
+            // var id = await gameRepository.Create(game);
+            // var extension = new FileInfo(file.FileName).Extension[1..];
+            // string filepath = $"Games/{id}.{extension}";
+
+            // using var avatarFileStream = System.IO.File.Create(filepath);
+            // await file.CopyToAsync(avatarFileStream);
 
             return base.RedirectToAction(nameof(GetGames), "Game");
             
         }
 
         [HttpGet]
-        [Route("Create")]
+        [Route("[action]")]
         public ActionResult Create(){
             if(base.TempData.TryGetValue("validation_errors", out object? validationErrorsObject)) {
                 if(validationErrorsObject is string validationErrorsJson) {

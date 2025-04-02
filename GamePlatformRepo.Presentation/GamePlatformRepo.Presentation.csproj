@@ -12,6 +12,4 @@
     <ProjectReference Include="..\GamePlatformRepo.Infrastructure\GamePlatformRepo.InfraStructure.csproj" />
   </ItemGroup>
 
- 
-
 </Project>

@@ -27,12 +27,7 @@ namespace GamePlatformRepo.Validators
             base.RuleFor((game) => game.Description)
                 .MaximumLength(250)
                     .WithMessage($"Length of description can not be bigger than 250 characters!");
-            base.RuleFor((game) => game.Creator)
-                .NotEmpty()
-                    .WithMessage("Creator can not be empty!")
-                .MaximumLength(50)
-                    .WithMessage($"Length of creator can not be bigger than 50 characters!");
-            base.RuleFor((game) => game.DateOfPublication)
+             base.RuleFor((game) => game.DateOfPublication)
                 .Must(BeAValidDate)
                 .WithMessage($"Date of Publication Must be a valid date");
         } 

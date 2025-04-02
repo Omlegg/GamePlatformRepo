@@ -11,6 +11,7 @@ namespace GamePlatformRepo.Repository
 {
     public class CommentDapperRepository : ICommentRepository
     {
+        
         private SqlConnection connection = new SqlConnection("Server=localhost;Database=GamePlatformDb;Integrated Security=true;");
 
         public async Task<int> Create(Comment comment){
